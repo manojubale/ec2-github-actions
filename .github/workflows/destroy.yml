@@ -5,15 +5,9 @@ on:
 
 jobs:
   terraform-destroy:
-
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: ec2-github-actions
-
     steps:
-
       - name: Checkout Code
         uses: actions/checkout@v4
 
@@ -27,8 +21,19 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
+      - name: Show current directory
+        run: |
+          pwd
+          ls -la
+
       - name: Terraform Init
         run: terraform init
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Destroy Plan
+        run: terraform plan -destroy
 
       - name: Terraform Destroy
         run: terraform destroy -auto-approve
